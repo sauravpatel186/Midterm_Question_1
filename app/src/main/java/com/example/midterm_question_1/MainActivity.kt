@@ -1,5 +1,6 @@
 package com.example.midterm_question_1
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -10,14 +11,14 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
         val num1 = findViewById<EditText>(R.id.edtnum1)
         val num2 = findViewById<EditText>(R.id.edtnum2)
         val result = findViewById<TextView>(R.id.resultText)
@@ -25,6 +26,20 @@ class MainActivity : AppCompatActivity() {
         val spinnerContainer = findViewById<Spinner>(R.id.spinner)
         val operationList= arrayOf("Please select an operation","Addition","Subtraction","Multiplication","Division")
         var operationSelected = ""
+        val intent = intent
+        val action = intent.action
+        val type = intent.type
+        if (Intent.ACTION_SEND == action && type != null) {
+            if ("text/plain" == type) {
+
+                val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+
+                if(!(sharedText.isNullOrEmpty())){
+                    result.text = sharedText.toString()
+                }
+            }
+        }
+
         val operationAdapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,operationList)
         spinnerContainer.adapter = operationAdapter
         spinnerContainer.onItemSelectedListener= object :AdapterView.OnItemSelectedListener{
@@ -76,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
 
         }
 
